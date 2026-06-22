@@ -10,7 +10,7 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 
 # Web3Forms access key. Get a free one at https://web3forms.com (enter your email, copy the key).
 # Replace the placeholder below, then run `python _gen.py` to restamp all generated pages.
-WEB3FORMS_KEY = "YOUR-WEB3FORMS-ACCESS-KEY"
+WEB3FORMS_KEY = "ff64e992-4e9d-4074-a992-b469dbacce9f"
 
 NAV = '''<header class="nav" id="top">
   <div class="wrap nav__inner">
