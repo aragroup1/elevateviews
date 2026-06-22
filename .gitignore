@@ -1,0 +1,15 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.log
+
+# Local preview / tooling
+.vercel
+.playwright-mcp/
+
+# Python (the one-shot generator)
+__pycache__/
+*.pyc
+
+# Local env (never commit keys)
+.env
