@@ -118,7 +118,7 @@ def page(title, desc, canonical, jsonld, body, services_active=False, sectors_ac
 
 def service_jsonld(name, desc, url):
     return f'''<script type="application/ld+json">
-{{"@context":"https://schema.org","@type":"Service","name":"{name}","description":"{desc}","provider":{{"@type":"ProfessionalService","name":"Elevate Views","url":"https://elevateviews.co.uk/"}},"areaServed":"GB","url":"{url}"}}
+{{"@context":"https://schema.org","@type":"Service","name":"{name}","description":"{desc}","provider":{{"@type":"ProfessionalService","name":"Elevate Views","url":"https://elevateviews.com/"}},"areaServed":"GB","url":"{url}"}}
 </script>'''
 
 
@@ -623,7 +623,7 @@ SECTOR_MOCKS = {
 
 
 def build_service(s):
-    url = f"https://elevateviews.co.uk/services/{s['slug']}.html"
+    url = f"https://elevateviews.com/services/{s['slug']}.html"
     jsonld = service_jsonld(s["h1"], s["desc"], url) + "\n" + faq_jsonld(s["faqs"])
     body = f'''  <section class="subhero">
     <div class="wrap subhero__grid">
@@ -661,7 +661,7 @@ def build_service(s):
 
 
 def build_sector(s):
-    url = f"https://elevateviews.co.uk/sectors/{s['slug']}.html"
+    url = f"https://elevateviews.com/sectors/{s['slug']}.html"
     jsonld = service_jsonld(s["h1"], s["desc"], url) + "\n" + faq_jsonld(s["faqs"])
     related = [
         ("/sectors/", "All sectors", "sectors"),
@@ -739,7 +739,7 @@ def build_services_index():
     out = page(
         "Services | Business Systems, Automation & Forecasting | Elevate Views",
         "Elevate Views services: custom operational systems, business automation, demand forecasting and web and AI for UK businesses.",
-        "https://elevateviews.co.uk/services/",
+        "https://elevateviews.com/services/",
         '', body, services_active=True)
     path = os.path.join(ROOT, "services", "index.html")
     with open(path, "w", encoding="utf-8") as f:
@@ -779,7 +779,7 @@ def build_sectors_index():
     out = page(
         "Sectors We Build For | Restaurants, Salons, Dental, Legal & More | Elevate Views",
         "Custom operational systems by sector: restaurants, salons, dental practices, law firms, accountants, ecommerce and warehousing across the UK.",
-        "https://elevateviews.co.uk/sectors/",
+        "https://elevateviews.com/sectors/",
         '', body, sectors_active=True)
     path = os.path.join(ROOT, "sectors", "index.html")
     with open(path, "w", encoding="utf-8") as f:

@@ -23,7 +23,7 @@ Vanilla HTML/CSS/JS, no build step. Deploy: GitHub repo + Vercel (root = this fo
 2. **System images:** add FAL_KEY to `_shared/mediagen/.env`, run `bash gen-images.sh`, then swap the
    4 `.gallery__shot` placeholder blocks in `index.html` for `<img>` tags.
 3. **Hero images:** the two Picsum images are placeholders; swap for real/branded assets.
-4. **Domain:** point elevateviews.co.uk at the Vercel deploy.
+4. **Domain:** point elevateviews.com at the Vercel deploy.
 
 ## Preview locally
 ```bash
