@@ -144,6 +144,9 @@ a { color: inherit; text-decoration: none; }
 .form input:focus, .form textarea:focus { outline: none; border-color: var(--signal); }
 .form .btn { justify-self: start; margin-top: 6px; }
 .form__note { font-size: 11px; color: var(--fg-dim); }
+.form__note.is-ok { color: #7fd1a6; }
+.form__note.is-err { color: #e6b072; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 
 /* Footer */
 .footer { background: var(--bg-2); border-top: 1px solid var(--line); padding: 56px 0 28px; }

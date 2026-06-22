@@ -8,6 +8,10 @@ import os, html
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
 
+# Web3Forms access key. Get a free one at https://web3forms.com (enter your email, copy the key).
+# Replace the placeholder below, then run `python _gen.py` to restamp all generated pages.
+WEB3FORMS_KEY = "YOUR-WEB3FORMS-ACCESS-KEY"
+
 NAV = '''<header class="nav" id="top">
   <div class="wrap nav__inner">
     <a class="brand" href="/" aria-label="Elevate Views home">
@@ -52,7 +56,11 @@ CONTACT = '''<section class="band band--cta" id="contact">
         <h2 class="section__h2 reveal">{cta_head}</h2>
       </div>
       <p class="section__lead reveal">A short call, an honest read on whether a system is worth it for you, and a fixed quote if it is.</p>
-      <form class="form reveal" action="https://formspree.io/f/your-form-id" method="POST">
+      <form class="form reveal" action="https://api.web3forms.com/submit" method="POST" data-web3form>
+        <input type="hidden" name="access_key" value="''' + WEB3FORMS_KEY + '''" />
+        <input type="hidden" name="subject" value="New enquiry from Elevate Views" />
+        <input type="hidden" name="from_name" value="Elevate Views website" />
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true" />
         <div class="form__row">
           <label>Name<input type="text" name="name" required autocomplete="name" /></label>
           <label>Email<input type="email" name="email" required autocomplete="email" /></label>
@@ -63,7 +71,7 @@ CONTACT = '''<section class="band band--cta" id="contact">
         </div>
         <label>What is eating your time right now?<textarea name="message" rows="4" required></textarea></label>
         <button class="btn btn--solid" type="submit">Book a call</button>
-        <p class="form__note">No spam. We reply within one working day.</p>
+        <p class="form__note" data-form-status>No spam. We reply within one working day.</p>
       </form>
     </div>
   </section>'''
