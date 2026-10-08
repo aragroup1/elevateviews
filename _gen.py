@@ -116,7 +116,7 @@ def page(title, desc, canonical, jsonld, body, services_active=False, sectors_ac
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 {jsonld}
-<link rel="stylesheet" href="/css/styles.css" />
+<link rel="stylesheet" href="/css/styles.css?v=20261008" />
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
