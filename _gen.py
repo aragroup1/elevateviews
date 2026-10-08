@@ -19,6 +19,7 @@ NAV = '''<header class="nav" id="top">
       <span class="brand__name">Elevate&nbsp;Views</span>
     </a>
     <nav class="nav__links" aria-label="Primary">
+      <a href="/services/lead-generation.html"{lead_active}>Lead generation</a>
       <a href="/services/"{services_active}>Services</a>
       <a href="/sectors/"{sectors_active}>Sectors</a>
       <a href="/#systems">Systems</a>
@@ -37,9 +38,10 @@ FOOTER = '''<footer class="footer">
     <div>
       <span class="brand__mark" aria-hidden="true">/EV</span>
       <p class="footer__name">Elevate Views</p>
-      <p class="footer__line">Custom operational systems and automation for UK businesses.</p>
+      <p class="footer__line">Lead generation, operational systems and automation for UK businesses.</p>
     </div>
     <nav class="footer__nav" aria-label="Footer">
+      <a href="/services/lead-generation.html">Lead generation</a>
       <a href="/services/">Services</a>
       <a href="/sectors/">Sectors</a>
       <a href="/resources/">Resources</a>
@@ -55,7 +57,7 @@ CONTACT = '''<section class="band band--cta" id="contact">
         <p class="rail__label reveal">Contact</p>
         <h2 class="section__h2 reveal">{cta_head}</h2>
       </div>
-      <p class="section__lead reveal">A short call, an honest read on whether a system is worth it for you, and a fixed quote if it is.</p>
+      <p class="section__lead reveal">{cta_lead}</p>
       <form class="form reveal" action="https://api.web3forms.com/submit" method="POST" data-web3form>
         <input type="hidden" name="access_key" value="''' + WEB3FORMS_KEY + '''" />
         <input type="hidden" name="subject" value="New enquiry from Elevate Views" />
@@ -69,17 +71,30 @@ CONTACT = '''<section class="band band--cta" id="contact">
           <label>Business / sector<input type="text" name="business" autocomplete="organization" /></label>
           <label>Phone<input type="tel" name="phone" autocomplete="tel" /></label>
         </div>
-        <label>What is eating your time right now?<textarea name="message" rows="4" required></textarea></label>
+        <label>{msg_label}<textarea name="message" rows="4" required></textarea></label>
         <button class="btn btn--solid" type="submit">Book a call</button>
         <p class="form__note" data-form-status>No spam. We reply within one working day.</p>
       </form>
     </div>
   </section>'''
 
+SYSTEMS_LEAD = "A short call, an honest read on whether a system is worth it for you, and a fixed quote if it is."
+SYSTEMS_MSG = "What is eating your time right now?"
 
-def page(title, desc, canonical, jsonld, body, services_active=False, sectors_active=False):
+
+def contact(cta_head, cta_lead=SYSTEMS_LEAD, msg_label=SYSTEMS_MSG):
+    return CONTACT.format(cta_head=cta_head, cta_lead=cta_lead, msg_label=msg_label)
+
+
+# The emAIler signup popup, carried on every page.
+POPUP = '''  <!-- The emAIler signup popup -->
+  <script async src="https://the-emailer.vercel.app/popup.js" data-key="ee90844e-7f85-416b-9533-5bf2ef291f07" data-heading="Join the Elevate Views list" data-code=""></script>'''
+
+
+def page(title, desc, canonical, jsonld, body, services_active=False, sectors_active=False, lead_active=False):
     sa = ' class="is-active"' if services_active else ''
     ka = ' class="is-active"' if sectors_active else ''
+    la = ' class="is-active"' if lead_active else ''
     return f'''<!DOCTYPE html>
 <html lang="en-GB">
 <head>
@@ -105,12 +120,13 @@ def page(title, desc, canonical, jsonld, body, services_active=False, sectors_ac
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
-{NAV.format(services_active=sa, sectors_active=ka)}
+{NAV.format(services_active=sa, sectors_active=ka, lead_active=la)}
 <main id="main">
 {body}
 </main>
 {FOOTER}
 <script src="/js/main.js"></script>
+{POPUP}
 </body>
 </html>
 '''
@@ -220,11 +236,12 @@ def sector_showcase(slug, mock_html, caption):
   </section>'''
 
 
-def faq_html(faqs):
+def faq_html(faqs, alt=True):
     items = "".join(
         f'<details class="reveal"><summary>{q}</summary><p>{a}</p></details>' for q, a in faqs
     )
-    return f'''<section class="band band--alt" id="faq">
+    band = "band band--alt" if alt else "band"
+    return f'''<section class="{band}" id="faq">
     <div class="wrap">
       <div class="rail"><p class="rail__label reveal">FAQ</p><h2 class="section__h2 reveal">Common questions.</h2></div>
       <div class="faq__list">{items}</div>
@@ -232,11 +249,12 @@ def faq_html(faqs):
   </section>'''
 
 
-def related_html(links):
+def related_html(links, alt=False):
     items = "".join(
         f'<a href="{href}"><span>{label}</span><small>{tag}</small></a>' for href, label, tag in links
     )
-    return f'''<section class="band">
+    band = "band band--alt" if alt else "band"
+    return f'''<section class="{band}">
     <div class="wrap">
       <div class="rail"><p class="rail__label reveal">Related</p><h2 class="section__h2 reveal">Keep exploring.</h2></div>
       <div class="related reveal">{items}</div>
@@ -652,7 +670,7 @@ def build_service(s):
 
   {related_html(s['related'])}
 
-  {CONTACT.format(cta_head="Want this built for your business?")}'''
+  {contact("Want this built for your business?")}'''
     out = page(s["title"], s["desc"], url, jsonld, body, services_active=True)
     path = os.path.join(ROOT, "services", f"{s['slug']}.html")
     with open(path, "w", encoding="utf-8") as f:
@@ -698,7 +716,7 @@ def build_sector(s):
 
   {related_html(related)}
 
-  {CONTACT.format(cta_head="Tell us where your " + s['slug'].replace('-', ' ').rstrip('s') + " business leaks time.")}'''
+  {contact("Tell us where your " + s['slug'].replace('-', ' ').rstrip('s') + " business leaks time.")}'''
     out = page(s["title"], s["desc"], url, jsonld, body, sectors_active=True)
     path = os.path.join(ROOT, "sectors", f"{s['slug']}.html")
     with open(path, "w", encoding="utf-8") as f:
@@ -706,9 +724,201 @@ def build_sector(s):
     return path
 
 
+# ---------- LEAD GENERATION (the central offer) ----------
+LEAD_GEN = {
+    "slug": "lead-generation",
+    "title": "Lead Generation Agency UK: 20 Booked Calls in 60 Days | Elevate Views",
+    "desc": "Done-for-you B2B cold email lead generation for UK businesses. 20 qualified sales calls booked into your calendar within 60 days, or your money back.",
+    "h1": "20 booked calls in 60 days, or your money back.",
+    "sub": "Done-for-you cold email outreach for UK businesses. We build the list, write the emails, handle the replies and book qualified sales calls into your calendar.",
+    "card_sub": "Done-for-you cold outreach: we find your buyers, write to them, handle the replies and fill your calendar.",
+    "kws": ["lead generation agency UK", "cold email outreach", "B2B appointment setting", "done-for-you lead generation", "outbound lead generation"],
+    "blocks": [
+        ("h2", "What is included"),
+        ("ul", ["Your ideal buyer and offer, agreed in writing before launch",
+                 "Dedicated sending domains and inboxes, set up and warmed",
+                 "A verified list of decision makers in your target market",
+                 "Email sequences written for your buyer, tested and refined weekly",
+                 "Every reply handled and every call booked, done for you",
+                 "A weekly report of replies and booked calls"]),
+        ("h2", "Your main domain is never at risk"),
+        ("p", "We never send from your main business domain. Outreach runs on separate domains set up for the purpose, so your everyday email keeps landing in inboxes whatever happens with the campaign."),
+        ("h2", "Done properly, and within the rules"),
+        ("p", "We contact business decision makers about something relevant to their work. Every email says who it is from and includes a simple way to opt out, and every opt-out is honoured. That is how B2B outreach works under UK GDPR and PECR, and it is also how you get replies instead of spam complaints."),
+        ("h2", "Why we put a guarantee on it"),
+        ("p", "Most lead generation agencies charge a retainer and report on opens and clicks. Opens do not pay your bills. Booked calls with the right people do, so that is the one number we promise, and we put our fee behind it."),
+    ],
+    "faqs": [
+        ("What counts as a booked call?", "A call with someone who matches the buyer profile we agree with you before launch, and who has accepted a calendar invite to speak with you."),
+        ("What if you book fewer than 20 calls in 60 days?", "You get your money back. The terms are short and agreed in writing before a single email is sent."),
+        ("When do the 60 days start?", "On launch day, when the first emails go out. Before that we set up and warm the sending inboxes, which usually takes a couple of weeks."),
+        ("Will cold email hurt my main domain?", "No. We send from separate domains set up only for outreach, so your main domain and everyday email are never put at risk."),
+        ("Is cold email legal in the UK?", "Yes, for business to business outreach done properly. Every email says who it is from and offers a simple opt-out, and every opt-out is honoured, in line with UK GDPR and PECR."),
+        ("What do I need to do?", "Join a short onboarding call, approve the buyer profile and the emails, then turn up to the calls we book. We handle everything in between."),
+        ("How much does it cost?", "It depends on your market and how many buyers we need to reach. We quote on the first call, before you commit to anything."),
+    ],
+    "related": [
+        ("/services/business-automation.html", "Workflow automation", "service"),
+        ("/services/web-and-ai.html", "Web and AI", "service"),
+        ("/services/", "All services", "services"),
+    ],
+}
+
+LEAD_CTA_LEAD = "A short call. We will tell you honestly whether 20 calls in 60 days is realistic in your market, and exactly how we would get them."
+LEAD_MSG = "Who is your ideal customer?"
+
+
+def booked_mock():
+    rows = [
+        ("Tue 10:30", "Operations director, logistics", ("pill--live", "Booked")),
+        ("Wed 14:00", "Founder, IT support firm", ("pill--live", "Booked")),
+        ("Thu 09:15", "Managing partner, accountancy", ("pill--live", "Booked")),
+        ("Reply", "Head of growth, recruitment", ("pill--prep", "Replied")),
+        ("Reply", "Director, commercial cleaning", ("pill--new", "New")),
+    ]
+    body = '<div class="mrow"><div class="mrow__l"><span class="mrow__txt">Calls booked</span></div><span class="sbar"><i style="width:70%"></i></span><span class="mrow__id">14 / 20</span></div>'
+    for rid, txt, (pc, pt) in rows:
+        body += f'<div class="mrow"><div class="mrow__l"><span class="mrow__id">{rid}</span><span class="mrow__txt">{txt}</span></div><span class="pill {pc}">{pt}</span></div>'
+    return f'''<div class="mock">
+            <div class="mock__bar"><span class="mock__dot"></span><span class="mock__dot"></span><span class="mock__dot"></span><span class="mock__title">booked calls</span></div>
+            <div class="mock__body">{body}</div>
+          </div>'''
+
+
+def guarantee_html(cta_href):
+    return f'''<section class="band band--cta" id="guarantee">
+    <div class="wrap">
+      <div class="rail">
+        <p class="rail__label reveal">The guarantee</p>
+        <h2 class="section__h2 reveal">The guarantee, in plain English.</h2>
+      </div>
+      <div class="guarantee">
+        <div class="guarantee__fig reveal">
+          <span class="guarantee__num">20</span>
+          <span class="guarantee__unit">booked calls in 60 days</span>
+        </div>
+        <div class="reveal">
+          <dl class="guarantee__terms">
+            <div><dt>The promise</dt><dd>At least 20 qualified sales calls booked into your calendar within 60 days of launch.</dd></div>
+            <div><dt>Qualified means</dt><dd>The person matches the buyer profile we agree with you, in writing, before a single email goes out.</dd></div>
+            <div><dt>The clock starts</dt><dd>On launch day, when the first emails are sent. Setup and inbox warm-up come before it.</dd></div>
+            <div><dt>If we miss</dt><dd>If we book fewer than 20, you get your money back.</dd></div>
+          </dl>
+          <a class="btn btn--solid guarantee__cta" href="{cta_href}">Book a call</a>
+        </div>
+      </div>
+    </div>
+  </section>'''
+
+
+def fit_html(alt=False):
+    band = "band band--alt" if alt else "band"
+    return f'''<section class="{band}" id="fit">
+    <div class="wrap">
+      <div class="rail">
+        <p class="rail__label reveal">Who it is for</p>
+        <h2 class="section__h2 reveal">Built for businesses that sell to businesses.</h2>
+      </div>
+      <div class="fit reveal">
+        <div class="fit__col">
+          <h3>A strong fit if</h3>
+          <ul>
+            <li>You sell to other businesses</li>
+            <li>One new client is worth thousands of pounds to you</li>
+            <li>You have room to take on more work</li>
+            <li>You can run a sales call and close it</li>
+          </ul>
+        </div>
+        <div class="fit__col fit__col--no">
+          <h3>Not a fit if</h3>
+          <ul>
+            <li>You sell low-cost products to consumers</li>
+            <li>You need sales this week, not this quarter</li>
+            <li>You want a list bought and blasted</li>
+            <li>You are already at full capacity</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>'''
+
+
+def build_lead_gen():
+    s = LEAD_GEN
+    url = f"https://elevateviews.com/services/{s['slug']}.html"
+    jsonld = service_jsonld("Done-for-you B2B lead generation", s["desc"], url) + "\n" + faq_jsonld(s["faqs"])
+    body = f'''  <section class="subhero">
+    <div class="wrap subhero__grid">
+      <p class="crumb reveal"><a href="/">Home</a> / <a href="/services/">Services</a> / lead generation</p>
+      <div class="reveal">
+        <h1 class="subhero__h1">{s['h1']}</h1>
+        <p class="subhero__sub">{s['sub']}</p>
+        {chips(s['kws'])}
+        <div class="subhero__cta">
+          <a class="btn btn--solid" href="#contact">Book a call</a>
+          <a class="btn btn--ghost" href="#guarantee">Read the guarantee</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {guarantee_html("#contact")}
+
+  <section class="band" id="how">
+    <div class="wrap">
+      <div class="rail">
+        <p class="rail__label reveal">How it works</p>
+        <h2 class="section__h2 reveal">Agree. Build. Write. Book.</h2>
+      </div>
+      <ol class="steps steps--four">
+        <li class="step reveal"><span class="step__k">Agree</span><p>A short onboarding call to pin down your ideal buyer, your offer and what counts as qualified. We put it in writing.</p></li>
+        <li class="step reveal"><span class="step__k">Build</span><p>Separate sending domains and inboxes, warmed up properly, plus a verified list of decision makers who match the profile.</p></li>
+        <li class="step reveal"><span class="step__k">Write</span><p>Short, personal emails and follow-ups written for your buyer. Nothing blasted at thousands from a template.</p></li>
+        <li class="step reveal"><span class="step__k">Book</span><p>We handle every reply, answer the questions and book qualified calls straight into your calendar.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="band band--alt" id="tracker">
+    <div class="wrap">
+      <div class="showcase reveal">
+        <div class="showcase__art" aria-label="Illustrative example of a weekly booked calls report">{booked_mock()}</div>
+        <p class="showcase__cap">Every week you see who replied, who booked and how close we are to 20. No vanity metrics, just conversations with buyers.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="wrap">
+      <div class="prose reveal">
+        {prose_blocks(s['blocks'])}
+      </div>
+    </div>
+  </section>
+
+  {fit_html(alt=True)}
+
+  {faq_html(s['faqs'], alt=False)}
+
+  {related_html(s['related'], alt=True)}
+
+  {contact("Tell us who you want to sell to.", LEAD_CTA_LEAD, LEAD_MSG)}'''
+    out = page(s["title"], s["desc"], url, jsonld, body, lead_active=True)
+    path = os.path.join(ROOT, "services", f"{s['slug']}.html")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(out)
+    return path
+
+
 def build_services_index():
-    cards = ""
-    for i, s in enumerate(SERVICES, 1):
+    cards = f'''        <a class="linkcard linkcard--lead reveal" href="/services/{LEAD_GEN['slug']}.html">
+          <span class="linkcard__no">01 / Lead generation</span>
+          <h3>{LEAD_GEN['h1']}</h3>
+          <p>{LEAD_GEN['card_sub']}</p>
+          <span class="linkcard__go">See the offer &rsaquo;</span>
+        </a>
+'''
+    for i, s in enumerate(SERVICES, 2):
         short = s["h1"]
         cards += f'''        <a class="linkcard reveal" href="/services/{s['slug']}.html">
           <span class="linkcard__no">{i:02d} / Service</span>
@@ -721,8 +931,8 @@ def build_services_index():
     <div class="wrap subhero__grid">
       <p class="crumb reveal"><a href="/">Home</a> / Services</p>
       <div class="reveal">
-        <h1 class="subhero__h1">What we build.</h1>
-        <p class="subhero__sub">Four services that make a business run easier: custom systems, automation, forecasting, and the web and AI layer on top.</p>
+        <h1 class="subhero__h1">What we do.</h1>
+        <p class="subhero__sub">Lead generation that fills your calendar with buyers, plus the systems, automation and web layer that run the work it brings in.</p>
         <div class="subhero__cta"><a class="btn btn--solid" href="/#contact">Book a call</a></div>
       </div>
     </div>
@@ -735,10 +945,10 @@ def build_services_index():
     </div>
   </section>
 
-  {CONTACT.format(cta_head="Not sure which you need?")}'''
+  {contact("Not sure which you need?")}'''
     out = page(
-        "Services | Business Systems, Automation & Forecasting | Elevate Views",
-        "Elevate Views services: custom operational systems, business automation, demand forecasting and web and AI for UK businesses.",
+        "Services | Lead Generation, Business Systems & Automation | Elevate Views",
+        "Elevate Views services: guaranteed B2B lead generation, custom operational systems, business automation, demand forecasting and web and AI for UK businesses.",
         "https://elevateviews.com/services/",
         '', body, services_active=True)
     path = os.path.join(ROOT, "services", "index.html")
@@ -775,7 +985,7 @@ def build_sectors_index():
     </div>
   </section>
 
-  {CONTACT.format(cta_head="Sector not listed?")}'''
+  {contact("Sector not listed?")}'''
     out = page(
         "Sectors We Build For | Restaurants, Salons, Dental, Legal & More | Elevate Views",
         "Custom operational systems by sector: restaurants, salons, dental practices, law firms, accountants, ecommerce and warehousing across the UK.",
@@ -788,7 +998,7 @@ def build_sectors_index():
 
 
 if __name__ == "__main__":
-    made = []
+    made = [build_lead_gen()]
     for s in SERVICES: made.append(build_service(s))
     for s in SECTORS: made.append(build_sector(s))
     made.append(build_services_index())

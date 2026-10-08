@@ -1,4 +1,4 @@
-# Elevate Views — Keyword Map & SEO Plan
+# Elevate Views: Keyword Map & SEO Plan
 
 Difficulty is an estimate (Low / Medium / High) based on competition for a brand-new domain
 with no authority. Confirm exact KD/volume in Ahrefs or SEMrush before committing content budget.

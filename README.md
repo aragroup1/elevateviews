@@ -1,21 +1,22 @@
 # Elevate Views
 
-Premium systems & automation agency site. Brand position: **we build the operational systems
-businesses run on** (ordering, stock, forecasting, automation), not commodity "AI websites".
+Agency site. Central offer (Oct 2026): **done-for-you cold outreach lead generation, 20 booked calls in
+60 days or your money back** (`services/lead-generation.html`, guarantee block on the home page).
+The systems and automation services (ordering, stock, forecasting, automation) sit alongside it.
 Concept: **Slate & Signal** (graphite + signal-blue, Inter Tight + Space Mono, structural grid).
 
 ## Stack
 Vanilla HTML/CSS/JS, no build step. Deploy: GitHub repo + Vercel (root = this folder).
 
 ## Structure
-- `index.html` — home (hero, services, **systems gallery**, worked example, process, sectors, FAQ, contact)
-- `services/` — 4 service pages + index (each targets its own keyword set)
-- `sectors/` — 7 industry verticals + index (each targets sector keywords)
-- `resources/` — blog shell (3 placeholder articles, ready for content)
-- `css/styles.css`, `js/main.js` — shared across all pages
-- `_gen.py` — one-shot generator that stamped services/* and sectors/* from data. Edit data + re-run to update.
-- `keyword-map.md` — per-page keyword + difficulty plan and content backlog
-- `gen-images.sh` — generates the 4 system-mockup images via mediagen (needs FAL_KEY)
+- `index.html`: home (lead gen hero, how it works, guarantee, fit, all services, **systems gallery**, FAQ, contact)
+- `services/`: lead generation page + 4 service pages + index (each targets its own keyword set)
+- `sectors/`: 7 industry verticals + index (each targets sector keywords)
+- `resources/`: blog shell (3 placeholder articles, ready for content)
+- `css/styles.css`, `js/main.js`: shared across all pages
+- `_gen.py`: one-shot generator that stamped services/* and sectors/* from data. Edit data + re-run to update.
+- `keyword-map.md`: per-page keyword + difficulty plan and content backlog
+- `gen-images.sh`: generates the 4 system-mockup images via mediagen (needs FAL_KEY)
 - `sitemap.xml`, `robots.txt`, `favicon.svg`, `vercel.json`
 
 ## To do before going live
