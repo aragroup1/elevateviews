@@ -112,11 +112,9 @@ def page(title, desc, canonical, jsonld, body, services_active=False, sectors_ac
 <meta property="og:site_name" content="Elevate Views" />
 <meta property="og:locale" content="en_GB" />
 <meta name="twitter:card" content="summary_large_image" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="preload" href="/fonts/inter-tight-latin.woff2" as="font" type="font/woff2" crossorigin />
 {jsonld}
-<link rel="stylesheet" href="/css/styles.css?v=20261008" />
+<link rel="stylesheet" href="/css/styles.css?v=20261019" />
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -125,7 +123,7 @@ def page(title, desc, canonical, jsonld, body, services_active=False, sectors_ac
 {body}
 </main>
 {FOOTER}
-<script src="/js/main.js"></script>
+<script src="/js/main.js" defer></script>
 {POPUP}
 </body>
 </html>
